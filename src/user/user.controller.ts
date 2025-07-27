@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Request, UseGuards, Body, Param } from '@nestjs/common';
+import { Controller, Post, Get, Request, UseGuards, Body, Param, Patch } from '@nestjs/common';
 import { UserService } from './user.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth/jwt-auth.guard';
 import { Types } from "mongoose";
@@ -28,5 +28,12 @@ export class UserController {
     @Get("checklink/:id")
     checkLink(@Param("id") linkId: string) {
       return this.userService.checkLinkId(linkId)
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Patch("changeuserpw")
+    changeUserPw(@Request() req, @Body() body: { newPassword: string }) {
+      const userId = new Types.ObjectId(req.user.id);
+      return this.userService.changeUserPw(userId, body.newPassword);
     }
 }

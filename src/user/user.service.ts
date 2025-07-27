@@ -5,6 +5,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { v4 as uuidv4 } from "uuid";
 import { MailerService } from '@nestjs-modules/mailer';
 import { Resetlink, ResetlinkDocument } from 'src/schemas/resetlink.schema';
+import * as bcrypt from "bcrypt";
 
 @Injectable()
 export class UserService {
@@ -66,5 +67,23 @@ export class UserService {
       await existingLink.save();
 
       return { message: "ok" };
+    };
+
+    async changeUserPw(userId: Types.ObjectId, newPassword: string) {
+      const user = await this.userModel.findById(userId);
+      if (!user) {
+        throw new UnauthorizedException("User not found");
+      }
+      const isMatchingPw = await bcrypt.compare(newPassword, user.password);
+      if (isMatchingPw) {
+        throw new ConflictException("Please enter new password");
+      }
+
+      const hashedNewPw = await bcrypt.hash(newPassword, 12);
+      user.password = hashedNewPw;
+      await user.save();
+
+      const returnMessage = user.language === "rs" ? "Lozinka je uspešno resetovana" : "The password has been reset"
+      return { message: returnMessage };
     }
 };
