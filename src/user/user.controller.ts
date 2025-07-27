@@ -16,7 +16,7 @@ export class UserController {
 
     @UseGuards(JwtAuthGuard)
     @Post("changepw")
-    changeUserPw(@Request() req, @Body() body: { email: string }) {
-      return this.userService.changeUserPw(req.user.id, body.email)
+    changeUserPw(@Body() body: { email: string }) {
+      return this.userService.changeUserPw(body.email)
     }
 }

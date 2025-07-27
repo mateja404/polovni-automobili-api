@@ -20,6 +20,9 @@ export class User {
 
   @Prop({ required: true, default: false })
   premium: boolean;
+
+  @Prop({ required: true, default: "rs" })
+  language: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
