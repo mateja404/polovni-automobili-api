@@ -10,9 +10,10 @@ import { ConfigModule } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { UserModule } from './user/user.module';
 import { UserService } from './user/user.service';
+import { Resetlink, ResetlinkSchema } from './schemas/resetlink.schema';
 
 @Module({
-  imports: [AuthModule, MongooseModule.forRoot('mongodb://localhost/polovniautomobili'), MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]), ConfigModule.forRoot({ isGlobal: true }), UserModule],
+  imports: [AuthModule, MongooseModule.forRoot('mongodb://localhost/polovniautomobili'), MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]), MongooseModule.forFeature([{ name: Resetlink.name, schema: ResetlinkSchema }]), ConfigModule.forRoot({ isGlobal: true }), UserModule],
   controllers: [AppController, AuthController],
   providers: [AppService, AuthService, UserService],
 })

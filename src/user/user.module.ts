@@ -3,9 +3,31 @@ import { UserService } from './user.service';
 import { UserController } from './user.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from 'src/schemas/user.schema';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { Resetlink, ResetlinkSchema } from 'src/schemas/resetlink.schema';
 
 @Module({
-  imports: [MongooseModule.forFeature([{ name: User.name, schema: UserSchema }])],
+  imports: [
+    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
+    MongooseModule.forFeature([{ name: Resetlink.name, schema: ResetlinkSchema }]),
+    MailerModule.forRoot({
+      transport: {
+        service: "gmail",
+        port: 465,
+        secure: true,
+        auth: {
+          user: "murkoffcorp11@gmail.com",
+          pass: "bhbq gwwi ghuf rydu",
+        },
+        tls: {
+          rejectUnauthorized: false,
+        },
+      },
+      defaults: {
+        from: '"no-reply" <no-reply@example.com>',
+      },
+    }),
+  ],
   providers: [UserService],
   controllers: [UserController]
 })

@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Request, UseGuards, Body } from '@nestjs/common';
+import { Controller, Post, Get, Request, UseGuards, Body, Param } from '@nestjs/common';
 import { UserService } from './user.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth/jwt-auth.guard';
 import { Types } from "mongoose";
@@ -15,8 +15,18 @@ export class UserController {
     }
 
     @UseGuards(JwtAuthGuard)
-    @Post("changepw")
-    changeUserPw(@Body() body: { email: string }) {
-      return this.userService.changeUserPw(body.email)
+    @Get("protected")
+    getProtectedRoute(@Request() req) {
+      return "protected";
+    }
+
+    @Post("submitemail")
+    sendEmail(@Body() body: { email: string }) {
+      return this.userService.sendEmail(body.email);
+    }
+
+    @Get("checklink/:id")
+    checkLink(@Param("id") linkId: string) {
+      return this.userService.checkLinkId(linkId)
     }
 }
