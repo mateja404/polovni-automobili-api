@@ -56,6 +56,9 @@ export class Ad {
 
   @Prop({ required: true })
   sigurnost: [string];
+
+  @Prop({ required: true })
+  images: [string]
 }
 
 export const UserSchema = SchemaFactory.createForClass(Ad);

@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Request, UseGuards, Body, Param, Patch } from '@nestjs/common';
+import { Controller, Post, Get, Request, UseGuards, Body, Param, Patch, Delete } from '@nestjs/common';
 import { UserService } from './user.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth/jwt-auth.guard';
 import { Types } from "mongoose";
@@ -35,5 +35,19 @@ export class UserController {
     changeUserPw(@Request() req, @Body() body: { newPassword: string }) {
       const userId = new Types.ObjectId(req.user.id);
       return this.userService.changeUserPw(userId, body.newPassword);
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Patch("changelanguage")
+    changeLanguage(@Request() req, @Body() body: { language: string }): Promise<{ message }> {
+      const userId = new Types.ObjectId(req.user.id);
+      return this.userService.changeLanguage(userId, body.language);
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Delete("deleteaccount")
+    deleteAccount(@Request() req): Promise<any> {
+      const userId = new Types.ObjectId(req.user.id);
+      return this.userService.deleteAccount(userId);
     }
 }

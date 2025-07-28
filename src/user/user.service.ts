@@ -85,5 +85,33 @@ export class UserService {
 
       const returnMessage = user.language === "rs" ? "Lozinka je uspešno resetovana" : "The password has been reset"
       return { message: returnMessage };
-    }
+    };
+
+    async changeLanguage(userId: Types.ObjectId, language: string): Promise<{ message }> {
+      const user = await this.userModel.findById(userId);
+      if (!user) {
+        throw new UnauthorizedException("User not found");
+      }
+
+      const isMatchingLanguage = language === user.language;
+      if (isMatchingLanguage) {
+        const returnMessage = user.language === "rs" ? "Već koristite ovaj jezik" : "Language already in use";
+        return { message: returnMessage };
+      }
+
+      user.language = language;
+      await user.save();
+
+      const returnMessage = user.language === "rs" ? "Uspešno ste promenili jezik" : "You have changed the language";
+      return { message: returnMessage };
+    };
+
+    async deleteAccount(userId: Types.ObjectId) {
+      const user = await this.userModel.findOneAndDelete({ _id: userId });
+      if (!user) {
+        throw new NotFoundException("User not found");
+      }
+
+      return { message: "Ok" };
+    };
 };

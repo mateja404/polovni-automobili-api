@@ -23,6 +23,9 @@ export class User {
 
   @Prop({ required: true, default: "rs" })
   language: string;
-}
+
+  @Prop({ required: true, default: 0 })
+  loginAttempts: number;
+};
 
 export const UserSchema = SchemaFactory.createForClass(User);
