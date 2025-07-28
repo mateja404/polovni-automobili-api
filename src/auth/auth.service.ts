@@ -37,12 +37,15 @@ export class AuthService {
     const matchingPassword = await bcrypt.compare(password, user.password);
     if (!matchingPassword) {
       user.loginAttempts += 1;
+      await user.save();
       throw new UnauthorizedException("Invalid credentials");
     }
     if (user.loginAttempts >= 3) {
       const returnMessage = user.language === "rs" ? "Nalog je zaključan" : "Account is locked";
       const stringId = String(user._id);
       const userId = new Types.ObjectId(stringId);
+      user.isLocked = true;
+      await user.save();
       await this.sendUnclockEmail(userId);
       throw new UnauthorizedException(returnMessage);
     };
@@ -51,6 +54,8 @@ export class AuthService {
   };
 
   async login(userId: Types.ObjectId, email: string) {
+    const user = await this.userModel.findById(userId);
+    const returnMessage = user?.language === "rs" ? "Uspešno ste se prijavili" : "Successfully logged in";
     const { accessToken, refreshToken } = await this.generateTokens(userId);
     return {
       user: {
@@ -58,7 +63,8 @@ export class AuthService {
         email: email,
       },
       accessToken: accessToken,
-      refreshToken: refreshToken
+      refreshToken: refreshToken,
+      message: returnMessage
     };
   };
 
