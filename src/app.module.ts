@@ -11,10 +11,33 @@ import { JwtService } from '@nestjs/jwt';
 import { UserModule } from './user/user.module';
 import { UserService } from './user/user.service';
 import { Resetlink, ResetlinkSchema } from './schemas/resetlink.schema';
+import { MailerModule } from '@nestjs-modules/mailer';
 
 @Module({
-  imports: [AuthModule, MongooseModule.forRoot('mongodb://localhost/polovniautomobili'), MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]), MongooseModule.forFeature([{ name: Resetlink.name, schema: ResetlinkSchema }]), ConfigModule.forRoot({ isGlobal: true }), UserModule],
+  imports: [
+    AuthModule, 
+    MongooseModule.forRoot('mongodb://localhost/polovniautomobili'), 
+    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]), 
+    MongooseModule.forFeature([{ name: Resetlink.name, schema: ResetlinkSchema }]), 
+    ConfigModule.forRoot({ isGlobal: true }), UserModule, 
+    MailerModule.forRoot({
+      transport: {
+        service: "gmail",
+        port: 465,
+        secure: true,
+        auth: {
+          user: "murkoffcorp11@gmail.com",
+          pass: "bhbq gwwi ghuf rydu",
+        },
+        tls: {
+          rejectUnauthorized: false,
+        },
+      },
+      defaults: {
+        from: '"no-reply" <no-reply@example.com>',
+      },
+    }),],
   controllers: [AppController, AuthController],
-  providers: [AppService, AuthService, UserService],
+  providers: [AppService, UserService],
 })
 export class AppModule {}

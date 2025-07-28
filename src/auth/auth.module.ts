@@ -8,7 +8,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import refreshConfig from './config/refresh.config';
 import { RefreshTokenStrategy } from './strategies/refresh.strategy';
-import { MailerService } from '@nestjs-modules/mailer';
+import { MailerModule } from '@nestjs-modules/mailer';
 
 @Module({
   imports: [
@@ -22,9 +22,10 @@ import { MailerService } from '@nestjs-modules/mailer';
       }),
       inject: [ConfigService],
     }),
-    ConfigModule.forFeature(refreshConfig)
+    ConfigModule.forFeature(refreshConfig),
+    MailerModule,
   ],
-  providers: [AuthService, LocalStrategy, JwtStrategy, RefreshTokenStrategy, MailerService],
+  providers: [AuthService, LocalStrategy, JwtStrategy, RefreshTokenStrategy],
   exports: [AuthService, JwtModule, ConfigModule],
 })
 export class AuthModule {}

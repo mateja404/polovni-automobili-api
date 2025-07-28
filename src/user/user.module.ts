@@ -10,23 +10,7 @@ import { Resetlink, ResetlinkSchema } from 'src/schemas/resetlink.schema';
   imports: [
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
     MongooseModule.forFeature([{ name: Resetlink.name, schema: ResetlinkSchema }]),
-    MailerModule.forRoot({
-      transport: {
-        service: "gmail",
-        port: 465,
-        secure: true,
-        auth: {
-          user: "murkoffcorp11@gmail.com",
-          pass: "bhbq gwwi ghuf rydu",
-        },
-        tls: {
-          rejectUnauthorized: false,
-        },
-      },
-      defaults: {
-        from: '"no-reply" <no-reply@example.com>',
-      },
-    }),
+    MailerModule,
   ],
   providers: [UserService],
   controllers: [UserController]
